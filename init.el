@@ -34,10 +34,29 @@
   :bind (("C-c <f6>" . heaven-and-hell-load-default-theme)
          ("<f6>" . heaven-and-hell-toggle-theme)))
 
+;;; Moody modeline
+(use-package moody
+  :config
+  (setq x-underline-at-descent-line t)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode)
+  (moody-replace-eldoc-minibuffer-message-function))
+    
+
+;;; Disable startup screen and startup echo area message and select the scratch buffer by default
+(setq inhibit-startup-buffer-menu t)
+(setq inhibit-startup-screen t)
+(setq inhibit-startup-echo-area-message "nik")
+(setq initial-buffer-choice t)
+
+
 ;;; Some General Settings
 
 ;; Disable annoying ring-bell when backspace key is pressed in certain situations
 (setq ring-bell-function 'ignore)
+
+;; setting cursor to not blink
+(blink-cursor-mode -1)
 
 ;; Disable scrollbar and toolbar
 (scroll-bar-mode -1)
@@ -52,6 +71,7 @@
 
 ;; Enable soft-wrap
 (global-visual-line-mode 1)
+(line-number-mode t)
 
 ;; Maintain a list of recent files opened
 (recentf-mode 1)            
@@ -68,6 +88,11 @@
 
 
 ;;; Coding specific setting
+;; Projectile
+(use-package projectile)
+
+;; Magit
+(use-package magit)
 
 ;; Automatically add ending brackets and braces
 (electric-pair-mode 1)
