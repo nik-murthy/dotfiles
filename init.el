@@ -42,11 +42,21 @@
 
 ;;; Some General Settings
 
+
 ;; Disable startup screen and startup echo area message and select the scratch buffer by default
 (setq inhibit-startup-buffer-menu t)
 (setq inhibit-startup-screen t)
 (setq inhibit-startup-echo-area-message "nik")
 (setq initial-buffer-choice t)
+
+;; Highlight current line
+(global-hl-line-mode 1)
+
+;; Changes all yes/no questions to y/n type
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; No need for ~ files when editing
+(setq create-lockfiles nil)
 
 ;; Disable annoying ring-bell when backspace key is pressed in certain situations
 (setq ring-bell-function 'ignore)
@@ -78,6 +88,21 @@
 (recentf-mode 1)            
 (setq recentf-max-saved-items 50)
 
+;; When you visit a file, point goes to the last place where it
+;; was when you previously visited the same file.
+;; http://www.emacswiki.org/emacs/SavePlace
+(require 'saveplace)
+(setq-default save-place t)
+;; keep track of saved places in ~/.emacs.d/places
+(setq save-place-file (concat user-emacs-directory "places"))
+
+;; Emacs can automatically create backup files. This tells Emacs to
+;; put all backups in ~/.emacs.d/backups. More info:
+;; http://www.gnu.org/software/emacs/manual/html_node/elisp/Backup-Files.html
+(setq backup-directory-alist `(("." . ,(concat user-emacs-directory
+                                               "backups"))))
+(setq auto-save-default nil)
+
 ;; Move all the backup files to specific cache directory
 ;; This way you won't have annoying temporary files starting with ~(tilde) in each directory
 ;; Following setting will move temporary files to specific folders inside cache directory in EMACS_DIR
@@ -87,7 +112,22 @@
       auto-save-list-file-prefix (expand-file-name "auto-save-list/.saves-" user-cache-directory)
       projectile-known-projects-file (expand-file-name "projectile-bookmarks.eld" user-cache-directory))
 
-;;; Packages that make life easier and faste
+
+;;; Shell integration
+;; Sets up exec-path-from shell
+;; https://github.com/purcell/exec-path-from-shell
+(use-package exec-path-from-shell :ensure t)
+(exec-path-from-shell-initialize)
+
+(defun shell-other-window ()
+  "Open a `shell' in a new window."
+  (interactive)
+  (let ((buf (shell)))
+    (switch-to-buffer (other-buffer buf))
+    (switch-to-buffer-other-window buf)))
+
+
+;;; Packages that make life easier and faster
 (use-package helm
   :ensure t
   :init 
@@ -102,18 +142,53 @@
   (("C-c f" . helm-recentf))   ;; Add new key to recentf
   (("C-c g" . helm-grep-do-git-grep)))  ;; Search using grep in a git project
 
-;;; Coding specific setting
-;; Projectile
-(use-package projectile 
+(use-package helm-descbinds
   :ensure t
-  :init (projectile-mode +1)
-  :config 
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  ) 
+  :bind ("C-h b" . helm-descbinds))
 
-;; Magit
-(use-package magit)
 
+(use-package hippie-exp
+  :bind (("M-/" . hippie-expand))
+  :config
+  (setq hippie-expand-try-functions-list '(try-expand-dabbrev
+                                           try-expand-dabbrev-all-buffers
+                                           try-expand-dabbrev-from-kill
+                                           try-complete-file-name-partially
+                                           try-complete-file-name
+                                           try-expand-all-abbrevs
+                                           try-expand-list
+                                           try-expand-line
+                                           try-complete-lisp-symbol-partially
+                                           try-complete-lisp-symbol)))
+
+
+(use-package multiple-cursors
+  :bind (("C-c m" . mc/mark-all-dwim)
+         ("C->" . mc/mark-next-like-this)
+         ("C-<" . mc/mark-previous-like-this)
+         :map mc/keymap
+         ("C-x v" . mc/vertical-align-with-space)
+         ("C-x n" . mc-hide-unmatched-lines-mode))
+  :config
+  (global-unset-key (kbd "M-<down-mouse-1>"))
+  (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)
+
+  (with-eval-after-load 'multiple-cursors-core
+    ;; Immediately load mc list, otherwise it will show as
+    ;; changed as empty in my git repo
+    (mc/load-lists)
+
+    (define-key mc/keymap (kbd "M-T") 'mc/reverse-regions)
+    (define-key mc/keymap (kbd "C-,") 'mc/unmark-next-like-this)
+    (define-key mc/keymap (kbd "C-.") 'mc/skip-to-next-like-this)))
+
+;;; General settings when using emacs as an IDE
+;; comments
+(defun toggle-comment-on-line ()
+  "comment or uncomment current line"
+  (interactive)
+  (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
+(global-set-key (kbd "C-;") 'toggle-comment-on-line)
 
 (defun my/ansi-colorize-buffer ()
   (let ((buffer-read-only nil))
@@ -135,16 +210,30 @@
 (show-paren-mode 1) 
 
 
+;;; Coding specific packages
+;; Projectile
+(use-package projectile 
+  :ensure t
+  :init (projectile-mode +1)
+  :config 
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  ) 
+
+;; Magit
+(use-package magit)
+
+
 ;;; custom-set-variables
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes '(doom-acario-light))
+ '(custom-enabled-themes '(doom-palenight))
  '(custom-safe-themes
    '("4e2e42e9306813763e2e62f115da71b485458a36e8b4c24e17a2168c45c9cf9d" default))
- '(package-selected-packages '(heaven-and-hell doom-themes)))
+ '(package-selected-packages
+   '(multiple-cursors helm-descbinds exec-path-from-shell heaven-and-hell doom-themes)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
