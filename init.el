@@ -9,19 +9,17 @@
 ;; Fetch the list of packages available 
 (unless package-archive-contents (package-refresh-contents))
 
-
 ;; Install use-package
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
 (setq use-package-always-ensure t)
 
-
 ;;; Theme
 (use-package doom-themes
-:ensure t 
-:init 
-(load-theme 'doom-palenight t))
+  :ensure t 
+  :init 
+  (load-theme 'doom-palenight t))
 
 (use-package heaven-and-hell
   :ensure t
@@ -41,16 +39,14 @@
   (moody-replace-mode-line-buffer-identification)
   (moody-replace-vc-mode)
   (moody-replace-eldoc-minibuffer-message-function))
-    
 
-;;; Disable startup screen and startup echo area message and select the scratch buffer by default
+;;; Some General Settings
+
+;; Disable startup screen and startup echo area message and select the scratch buffer by default
 (setq inhibit-startup-buffer-menu t)
 (setq inhibit-startup-screen t)
 (setq inhibit-startup-echo-area-message "nik")
 (setq initial-buffer-choice t)
-
-
-;;; Some General Settings
 
 ;; Disable annoying ring-bell when backspace key is pressed in certain situations
 (setq ring-bell-function 'ignore)
@@ -62,6 +58,9 @@
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 
+;; full path in title bar
+(setq-default frame-title-format "%b (%f)")
+
 ;; Set language environment to UTF-8
 (set-language-environment "UTF-8")
 (set-default-coding-systems 'utf-8)
@@ -71,7 +70,9 @@
 
 ;; Enable soft-wrap
 (global-visual-line-mode 1)
-(line-number-mode t)
+
+;; Show line numbers
+(global-display-line-numbers-mode)
 
 ;; Maintain a list of recent files opened
 (recentf-mode 1)            
@@ -86,13 +87,43 @@
       auto-save-list-file-prefix (expand-file-name "auto-save-list/.saves-" user-cache-directory)
       projectile-known-projects-file (expand-file-name "projectile-bookmarks.eld" user-cache-directory))
 
+;;; Packages that make life easier and faste
+(use-package helm
+  :ensure t
+  :init 
+  (helm-mode 1)
+  (progn (setq helm-buffers-fuzzy-matching t))
+  :bind
+  (("C-c h" . helm-command-prefix))
+  (("M-x" . helm-M-x))
+  (("C-x C-f" . helm-find-files))
+  (("C-x b" . helm-buffers-list))
+  (("C-c b" . helm-bookmarks))
+  (("C-c f" . helm-recentf))   ;; Add new key to recentf
+  (("C-c g" . helm-grep-do-git-grep)))  ;; Search using grep in a git project
 
 ;;; Coding specific setting
 ;; Projectile
-(use-package projectile)
+(use-package projectile 
+  :ensure t
+  :init (projectile-mode +1)
+  :config 
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  ) 
 
 ;; Magit
 (use-package magit)
+
+
+(defun my/ansi-colorize-buffer ()
+  (let ((buffer-read-only nil))
+	(ansi-color-apply-on-region (point-min) (point-max))))
+
+(use-package ansi-color
+  :ensure t
+  :config
+  (add-hook 'compilation-filter-hook 'my/ansi-colorize-buffer)
+  )
 
 ;; Automatically add ending brackets and braces
 (electric-pair-mode 1)
