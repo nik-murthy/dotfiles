@@ -1,4 +1,6 @@
+;; ***************
 ;;; Initialize package management
+;; ***************
 (require 'package)
 (setq package-enable-at-startup nil)
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
@@ -15,7 +17,9 @@
 
 (setq use-package-always-ensure t)
 
+;; ***************
 ;;; Theme
+;; ***************
 (use-package doom-themes
   :ensure t 
   :init 
@@ -32,7 +36,9 @@
   :bind (("C-c <f6>" . heaven-and-hell-load-default-theme)
          ("<f6>" . heaven-and-hell-toggle-theme)))
 
+;; ***************
 ;;; Moody modeline
+;; ***************
 (use-package moody
   :config
   (setq x-underline-at-descent-line t)
@@ -40,9 +46,9 @@
   (moody-replace-vc-mode)
   (moody-replace-eldoc-minibuffer-message-function))
 
+;; ***************
 ;;; Some General Settings
-
-
+;; ***************
 ;; Disable startup screen and startup echo area message and select the scratch buffer by default
 (setq inhibit-startup-buffer-menu t)
 (setq inhibit-startup-screen t)
@@ -112,8 +118,9 @@
       auto-save-list-file-prefix (expand-file-name "auto-save-list/.saves-" user-cache-directory)
       projectile-known-projects-file (expand-file-name "projectile-bookmarks.eld" user-cache-directory))
 
-
+;; ***************
 ;;; Shell integration
+;; ***************
 ;; Sets up exec-path-from shell
 ;; https://github.com/purcell/exec-path-from-shell
 (use-package exec-path-from-shell :ensure t)
@@ -126,8 +133,9 @@
     (switch-to-buffer (other-buffer buf))
     (switch-to-buffer-other-window buf)))
 
-
+;; ***************
 ;;; Packages that make life easier and faster
+;; ***************
 (use-package helm
   :ensure t
   :init 
@@ -182,7 +190,12 @@
     (define-key mc/keymap (kbd "C-,") 'mc/unmark-next-like-this)
     (define-key mc/keymap (kbd "C-.") 'mc/skip-to-next-like-this)))
 
+(use-package ace-window
+  :bind ("M-o" . ace-window))
+
+;; ***************
 ;;; General settings when using emacs as an IDE
+;; ***************
 ;; comments
 (defun toggle-comment-on-line ()
   "comment or uncomment current line"
@@ -209,8 +222,9 @@
 ;; Highlight matching brackets and braces
 (show-paren-mode 1) 
 
-
-;;; Coding specific packages
+;; ***************
+;;; General coding related packages
+;; ***************
 ;; Projectile
 (use-package projectile 
   :ensure t
@@ -223,7 +237,97 @@
 (use-package magit)
 
 
+;; ***************
+;; Clojure
+;; ***************
+(use-package paredit)
+
+(use-package rainbow-delimiters)
+
+(use-package clojure-mode
+  :config
+  
+  ;; Use clojure mode for other extensions
+  (add-to-list 'auto-mode-alist '("\\.edn$" . clojure-mode))
+  (add-to-list 'auto-mode-alist '("\\.boot$" . clojure-mode))
+  (add-to-list 'auto-mode-alist '("\\.cljs.*$" . clojure-mode))
+  (add-to-list 'auto-mode-alist '("lein-env" . enh-ruby-mode))
+
+  ;; Enable paredit for Clojure
+  (add-hook 'clojure-mode-hook 'enable-paredit-mode)
+
+  ;; This is useful for working with camel-case tokens, like names of
+  ;; Java classes (e.g. JavaClassName)
+  (add-hook 'clojure-mode-hook 'subword-mode)
+
+  ;; syntax hilighting for midje
+  (add-hook 'clojure-mode-hook
+			(lambda ()
+              (setq inferior-lisp-program "lein repl")
+              (font-lock-add-keywords
+               nil
+               '(("(\\(facts?\\)"
+                  (1 font-lock-keyword-face))
+				 ("(\\(background?\\)"
+                  (1 font-lock-keyword-face))))
+              (define-clojure-indent (fact 1))
+              (define-clojure-indent (facts 1))
+              (rainbow-delimiters-mode))))
+
+(use-package cider
+  :ensure t
+  :pin melpa-stable
+
+  :config
+  ;; provides minibuffer documentation for the code you're typing into the repl
+  (add-hook 'cider-mode-hook 'eldoc-mode)
+
+  ;; go right to the REPL buffer when it's finished connecting
+  (setq cider-repl-pop-to-buffer-on-connect t)
+
+  ;; When there's a cider error, show its buffer and switch to it
+  (setq cider-show-error-buffer t)
+  (setq cider-auto-select-error-buffer t)
+
+  ;; Where to store the cider history.
+  (setq cider-repl-history-file "~/.emacs.d/cider-history")
+
+  ;; Wrap when navigating history.
+  (setq cider-repl-wrap-history t)
+
+  ;; enable paredit in your REPL
+  (add-hook 'cider-repl-mode-hook 'paredit-mode))
+
+;; key bindings
+;; these help me out with the way I usually develop web apps
+(defun cider-start-http-server ()
+  (interactive)
+  (cider-load-current-buffer)
+  (let ((ns (cider-current-ns)))
+    (cider-repl-set-ns ns)
+    (cider-interactive-eval (format "(println '(def server (%s/start))) (println 'server)" ns))
+    (cider-interactive-eval (format "(def server (%s/start)) (println server)" ns))))
+
+
+(defun cider-refresh ()
+  (interactive)
+  (cider-interactive-eval (format "(user/reset)")))
+
+(defun cider-user-ns ()
+  (interactive)
+  (cider-repl-set-ns "user"))
+
+(eval-after-load 'cider
+  '(progn
+     (define-key clojure-mode-map (kbd "C-c C-v") 'cider-start-http-server)
+     (define-key clojure-mode-map (kbd "C-M-r") 'cider-refresh)
+     (define-key clojure-mode-map (kbd "C-c u") 'cider-user-ns)
+     (define-key cider-mode-map (kbd "C-c u") 'cider-user-ns)))
+
+
+;; ***************
 ;;; custom-set-variables
+;; ***************
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -233,7 +337,7 @@
  '(custom-safe-themes
    '("4e2e42e9306813763e2e62f115da71b485458a36e8b4c24e17a2168c45c9cf9d" default))
  '(package-selected-packages
-   '(multiple-cursors helm-descbinds exec-path-from-shell heaven-and-hell doom-themes)))
+   '(cider clojure-mode rainbow-delimiters paredit org-static-blog ace-window multiple-cursors helm-descbinds exec-path-from-shell heaven-and-hell doom-themes)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
