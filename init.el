@@ -136,6 +136,12 @@
 ;; ***************
 ;;; Packages that make life easier and faster
 ;; ***************
+(use-package dired-subtree
+  :ensure t
+  :after dired
+  :bind (:map dired-mode-map
+			  ("TAB" . dired-subtree-toggle)))
+
 (use-package helm
   :ensure t
   :init 
@@ -337,7 +343,7 @@
  '(custom-safe-themes
    '("4e2e42e9306813763e2e62f115da71b485458a36e8b4c24e17a2168c45c9cf9d" default))
  '(package-selected-packages
-   '(cider clojure-mode rainbow-delimiters paredit org-static-blog ace-window multiple-cursors helm-descbinds exec-path-from-shell heaven-and-hell doom-themes)))
+   '(dired-subtree cider clojure-mode rainbow-delimiters paredit org-static-blog ace-window multiple-cursors helm-descbinds exec-path-from-shell heaven-and-hell doom-themes)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
