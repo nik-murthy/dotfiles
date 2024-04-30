@@ -282,7 +282,6 @@
 
 (use-package cider
   :ensure t
-  :pin melpa-stable
 
   :config
   ;; provides minibuffer documentation for the code you're typing into the repl
