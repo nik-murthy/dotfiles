@@ -49,3 +49,5 @@ vim.keymap.set("v", "p", '"_dP')
 -- set jj to esc
 vim.keymap.set("i", "jk", "<Esc>", { noremap = true, silent = true })
 
+vim.keymap.set('n', '<leader>t', ':lua require("nik-m.plugins.colours").toggle_theme()<CR>', { noremap = true, silent = true })
+
