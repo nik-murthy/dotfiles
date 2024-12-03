@@ -64,3 +64,6 @@ vim.keymap.set("n", "<leader>gc", require("fzf-lua").git_bcommits, { desc = "Bro
 vim.keymap.set("n", "<leader>gs", require("fzf-lua").git_status, { desc = "Git Status" })
 vim.keymap.set("n", "<leader>s", require("fzf-lua").spell_suggest, { desc = "Spelling Suggestions" })
 vim.keymap.set("n", "<leader>cj", require("fzf-lua").lsp_definitions, { desc = "Jump to Definition" })
+
+-- lazygit
+vim.keymap.set('n', '<leader>lg', ':FloatermNew lazygit<CR>')
