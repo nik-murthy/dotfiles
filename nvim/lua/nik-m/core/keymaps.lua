@@ -49,5 +49,18 @@ vim.keymap.set("v", "p", '"_dP')
 -- set jj to esc
 vim.keymap.set("i", "jk", "<Esc>", { noremap = true, silent = true })
 
-vim.keymap.set('n', '<leader>t', ':lua require("nik-m.plugins.colours").toggle_theme()<CR>', { noremap = true, silent = true })
-
+-- fzf keymaps
+vim.keymap.set("n", "<leader>p", require("fzf-lua").files, { desc = "FZF Files" })
+vim.keymap.set("n", "<leader><leader>", require("fzf-lua").resume, { desc = "FZF Resume" })
+vim.keymap.set("n", "<leader>r", require("fzf-lua").registers, { desc = "Registers" })
+vim.keymap.set("n", "<leader>m", require("fzf-lua").marks, { desc = "Marks" })
+vim.keymap.set("n", "<leader>k", require("fzf-lua").keymaps, { desc = "Keymaps" })
+vim.keymap.set("n", "<leader>f", require("fzf-lua").live_grep, { desc = "FZF Grep" })
+vim.keymap.set("n", "<leader>b", require("fzf-lua").buffers, { desc = "FZF Buffers" })
+vim.keymap.set("v", "<leader>8", require("fzf-lua").grep_visual, { desc = "FZF Selection" })
+vim.keymap.set("n", "<leader>7", require("fzf-lua").grep_cword, { desc = "FZF Word" })
+vim.keymap.set("n", "<leader>j", require("fzf-lua").helptags, { desc = "Help Tags" })
+vim.keymap.set("n", "<leader>gc", require("fzf-lua").git_bcommits, { desc = "Browse File Commits" })
+vim.keymap.set("n", "<leader>gs", require("fzf-lua").git_status, { desc = "Git Status" })
+vim.keymap.set("n", "<leader>s", require("fzf-lua").spell_suggest, { desc = "Spelling Suggestions" })
+vim.keymap.set("n", "<leader>cj", require("fzf-lua").lsp_definitions, { desc = "Jump to Definition" })

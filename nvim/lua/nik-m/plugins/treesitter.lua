@@ -21,7 +21,6 @@ return {
       highlight = {
         enable = true,
         use_languagetree = true,
-        -- disable = { "markdown" },
       },
     })
   end,
