@@ -9,3 +9,5 @@ configstore
 fish
 iterm2
 jgit
+
+nvim/lua-lock.json

@@ -66,4 +66,7 @@ vim.keymap.set("n", "<leader>s", require("fzf-lua").spell_suggest, { desc = "Spe
 vim.keymap.set("n", "<leader>cj", require("fzf-lua").lsp_definitions, { desc = "Jump to Definition" })
 
 -- lazygit
-vim.keymap.set('n', '<leader>lg', ':FloatermNew lazygit<CR>')
+vim.keymap.set("n", "<leader>lg", ":FloatermNew lazygit<CR>", { desc = "Open lazygit" })
+
+-- new scratch buffer
+vim.keymap.set("n", "<leader>sc", ":enew<CR>:setlocal buftype=nofile<CR>", { desc = "New Scratch Buffer" })
