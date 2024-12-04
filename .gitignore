@@ -2,12 +2,12 @@
 # directories
 elpa/
 auto-save-list/
-
-# files
-recentf
 configstore
 fish
 iterm2
 jgit
+
+# files
+recentf
 
 .config/nvim/lazy-lock.json
