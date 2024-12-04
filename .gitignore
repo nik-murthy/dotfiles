@@ -10,4 +10,4 @@ fish
 iterm2
 jgit
 
-nvim/lua-lock.json
+nvim/lazy-lock.json
