@@ -493,9 +493,9 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(doom-palenight))
  '(custom-safe-themes
-   '("4e2e42e9306813763e2e62f115da71b485458a36e8b4c24e17a2168c45c9cf9d" default))
- '(package-selected-packages
-   '(treemacs-tab-bar treemacs-persp treemacs-magit treemacs-icons-dired treemacs-projectile treemacs yaml-pro yaml-mode flymake-yamllint markdown-mode dired-subtree cider clojure-mode rainbow-delimiters paredit org-static-blog ace-window multiple-cursors helm-descbinds exec-path-from-shell heaven-and-hell doom-themes)))
+   '("4e2e42e9306813763e2e62f115da71b485458a36e8b4c24e17a2168c45c9cf9d"
+	 default))
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

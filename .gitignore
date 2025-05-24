@@ -11,3 +11,7 @@ jgit
 # files
 recentf
 .config/nvim/lazy-lock.json
+.emacs.d/.cache/
+.emacs.d/cache/
+.emacs.d/eln-cache/
+.emacs.d/transient/
