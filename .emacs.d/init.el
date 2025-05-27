@@ -50,11 +50,6 @@
 ;; ***************
 ;;; Some General Settings
 ;; ***************
-;; Disable startup screen and startup echo area message and select the scratch buffer by default
-(setq inhibit-startup-buffer-menu t)
-(setq inhibit-startup-screen t)
-(setq inhibit-startup-echo-area-message "nik")
-(setq initial-buffer-choice t)
 
 ;; Highlight current line
 (global-hl-line-mode 1)
@@ -67,20 +62,6 @@
 
 ;; Disable annoying ring-bell when backspace key is pressed in certain situations
 (setq ring-bell-function 'ignore)
-
-;; setting cursor to not blink
-(blink-cursor-mode -1)
-
-;; Disable scrollbar and toolbar
-(scroll-bar-mode -1)
-(tool-bar-mode -1)
-
-;; full path in title bar
-(setq-default frame-title-format "%b (%f)")
-
-;; Set language environment to UTF-8
-(set-language-environment "UTF-8")
-(set-default-coding-systems 'utf-8)
 
 ;; Longer whitespace, otherwise syntax highlighting is limited to default column
 (setq whitespace-line-column 1000) 
