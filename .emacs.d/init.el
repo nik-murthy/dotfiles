@@ -5,14 +5,17 @@
     (message "Loading %s" file)
     (load file)))
 
-;; Automatically tangle org files when saved in customisations folder
-(defun tangle-config-org ()
-  "Tangle org files automatically if they are in customisations/"
-  (when (string-prefix-p (expand-file-name "customisations/" user-emacs-directory)
-                         (buffer-file-name))
-    (org-babel-tangle)))
 
-(add-hook 'org-mode-hook
-          (lambda ()
-            (add-hook 'after-save-hook #'tangle-config-org nil 'make-it-local)))
-
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes '(doom-palenight))
+ '(package-selected-packages nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

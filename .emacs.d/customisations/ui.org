@@ -1,0 +1,44 @@
+#+TITLE: UI Configuration
+#+PROPERTY: header-args:emacs-lisp :tangle ui.el :results silent
+
+* Theme
+
+#+begin_src emacs-lisp
+(use-package doom-themes
+  :ensure t 
+  :init 
+  (load-theme 'doom-palenight t))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package heaven-and-hell
+  :ensure t
+  :init
+  (setq heaven-and-hell-theme-type 'dark)
+  (setq heaven-and-hell-themes
+        '((light . doom-acario-light)
+          (dark . doom-palenight)))
+  :hook (after-init . heaven-and-hell-init-hook)
+  :bind (("C-c <f6>" . heaven-and-hell-load-default-theme)
+         ("<f6>" . heaven-and-hell-toggle-theme)))
+#+end_src
+
+* Moody Modeline
+
+#+begin_src emacs-lisp
+(use-package moody
+  :config
+  (setq x-underline-at-descent-line t)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode)
+  (moody-replace-eldoc-minibuffer-message-function))
+#+end_src
+
+* Other UI Enhancements
+
+#+begin_src emacs-lisp
+(global-hl-line-mode 1)
+(setq whitespace-line-column 1000) 
+(global-visual-line-mode 1)
+(global-display-line-numbers-mode)
+#+end_src

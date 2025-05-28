@@ -1,0 +1,80 @@
+#+TITLE: Emacs Completion Setup
+#+AUTHOR: Nik M
+#+PROPERTY: header-args :tangle completions.el :results silent
+
+* Completion Framework Setup
+
+** Vertico
+#+BEGIN_SRC emacs-lisp
+(use-package vertico
+  :ensure t
+  :init
+  (vertico-mode 1))
+#+END_SRC
+
+** Orderless
+#+BEGIN_SRC emacs-lisp
+(use-package orderless
+  :ensure t
+  :init
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
+#+END_SRC
+
+** Marginalia
+#+BEGIN_SRC emacs-lisp
+(use-package marginalia
+  :ensure t
+  :init
+  (marginalia-mode 1))
+#+END_SRC
+
+** Consult
+#+BEGIN_SRC emacs-lisp
+(use-package consult
+  :ensure t
+  :bind
+  (("C-s" . consult-line)               ;; Search lines in buffer
+   ("C-x b" . consult-buffer)           ;; Enhanced buffer switcher
+   ("M-y" . consult-yank-pop)           ;; Browse kill ring
+   ("C-x M-:" . consult-complex-command) ;; M-x history
+   ("M-g g" . consult-goto-line)        ;; Go to line
+   ("M-g M-g" . consult-goto-line)
+   ("M-g o" . consult-outline)          ;; Buffer outline
+   ("C-c k" . consult-ripgrep)          ;; Ripgrep search
+   ("C-c f" . consult-find)           ;; Find files with consult
+   )
+  :init
+  (setq consult-project-root-function #'projectile-project-root)
+  (setq consult-preview-key 'any))
+#+END_SRC
+
+** Company
+#+BEGIN_SRC emacs-lisp
+(use-package company
+  :ensure t
+  :init
+  (global-company-mode 1)  ;; Enable company globally
+  :config
+  (setq company-idle-delay 0.2)       ;; Show suggestions quickly
+  (setq company-minimum-prefix-length 1) ;; Start completing after 1 char
+  (setq company-tooltip-align-annotations t) ;; Align annotations to the right tooltip border
+  (define-key company-active-map (kbd "TAB") 'company-complete-selection)
+  (define-key company-active-map (kbd "<tab>") 'company-complete-selection))
+#+END_SRC
+
+** Yasnippet
+#+BEGIN_SRC emacs-lisp
+(use-package yasnippet
+  :ensure t
+  :init
+  (yas-global-mode 1)
+  :config
+  (yas-reload-all)
+  )
+
+(use-package yasnippet-snippets
+  :ensure t
+  :after yasnippet)
+#+END_SRC
