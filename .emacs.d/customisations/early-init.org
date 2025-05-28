@@ -1,0 +1,31 @@
+#+TITLE: Early Init Configuration
+#+PROPERTY: header-args :tangle ../early-init.el :results silent
+
+* UI Tweaks Before Package Load
+
+These settings disable UI elements *before* packages or themes are initialized.
+
+#+begin_src emacs-lisp
+;; early init GUI configuration
+
+;; Disable startup screen and startup echo area message and select the scratch buffer by default
+(setq inhibit-startup-buffer-menu t)
+(setq inhibit-startup-screen t)
+(setq inhibit-startup-echo-area-message "nik")
+(setq initial-buffer-choice t)
+
+;; setting cursor to not blink
+(blink-cursor-mode -1)
+
+;; Disable scrollbar and toolbar
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+
+;; full path in title bar
+(setq-default frame-title-format "%b (%f)")
+
+;; Set language environment to UTF-8
+(set-language-environment "UTF-8")
+(set-default-coding-systems 'utf-8)
+#+end_src
