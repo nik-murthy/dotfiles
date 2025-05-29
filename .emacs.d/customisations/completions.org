@@ -50,18 +50,24 @@
   (setq consult-preview-key 'any))
 #+END_SRC
 
-** Company
+** Corfu (In-Buffer Completion)
 #+BEGIN_SRC emacs-lisp
-(use-package company
+(use-package corfu
   :ensure t
   :init
-  (global-company-mode 1)  ;; Enable company globally
-  :config
-  (setq company-idle-delay 0.2)       ;; Show suggestions quickly
-  (setq company-minimum-prefix-length 1) ;; Start completing after 1 char
-  (setq company-tooltip-align-annotations t) ;; Align annotations to the right tooltip border
-  (define-key company-active-map (kbd "TAB") 'company-complete-selection)
-  (define-key company-active-map (kbd "<tab>") 'company-complete-selection))
+  (global-corfu-mode)
+  :custom
+  (corfu-cycle t)                ;; Enable cycling through candidates
+  (corfu-auto t)                 ;; Enable auto completion
+  (corfu-auto-delay 0.2)
+  (corfu-auto-prefix 1)
+  (corfu-preview-current nil)   ;; Disable preview
+  :bind
+  (:map corfu-map
+        ("TAB" . corfu-next)
+        ([tab] . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous)))
 #+END_SRC
 
 ** Yasnippet

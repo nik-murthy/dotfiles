@@ -15,8 +15,6 @@ Start by setting up package.el and ensuring `use-package` is available.
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")))
 
-(package-initialize)
-
 ;; Fetch the list of packages available 
 (unless package-archive-contents (package-refresh-contents))
 
@@ -108,4 +106,15 @@ Start by setting up package.el and ensuring `use-package` is available.
 (use-package exec-path-from-shell
   :ensure t)
 (exec-path-from-shell-initialize)
+#+END_SRC
+
+* Version Control
+
+** Magit
+#+BEGIN_SRC emacs-lisp
+(use-package magit
+  :ensure t
+  :bind (("C-x g" . magit-status))
+  :config
+  (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 #+END_SRC

@@ -1,0 +1,30 @@
+#+TITLE: Emacs Writing & Blogging Setup
+#+AUTHOR: Nik M
+#+PROPERTY: header-args :tangle writing.el :results silent
+
+* Org-mode Enhancements
+
+** Core Org Settings
+#+BEGIN_SRC emacs-lisp
+(use-package org
+  :config
+  (setq org-hide-emphasis-markers t
+        org-startup-indented t
+        org-pretty-entities t
+        org-ellipsis " ⤵"
+        org-directory "~/workspace/notes"
+        org-default-notes-file "~/notes/inbox.org"))
+#+END_SRC
+
+** Visual Tweaks with org-modern
+#+BEGIN_SRC emacs-lisp
+(use-package org-modern
+  :hook (org-mode . org-modern-mode))
+#+END_SRC
+
+* Blogging with ox-hugo
+
+#+BEGIN_SRC emacs-lisp
+(use-package ox-hugo
+  :after ox)
+#+END_SRC
