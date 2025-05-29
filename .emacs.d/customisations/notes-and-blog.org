@@ -5,6 +5,7 @@
 * Org-mode Enhancements
 
 ** Core Org Settings
+
 #+BEGIN_SRC emacs-lisp
 (use-package org
   :config
@@ -18,12 +19,14 @@
 
 
 ** Visual Tweaks with org-modern
+
 #+BEGIN_SRC emacs-lisp
 (use-package org-modern
   :hook (org-mode . org-modern-mode))
 #+END_SRC
 
 * Capture Templates
+
 #+BEGIN_SRC emacs-lisp
 (setq org-capture-templates
       `(
@@ -60,7 +63,24 @@
 (global-set-key (kbd "C-c c") 'org-capture)
 #+END_SRC
 
+* Backup notes on emacs exit
+
+#+begin_src emacs-lisp
+(defun backup-org-notes ()
+  (let* ((src (expand-file-name "~/workspace/notes/"))
+         (dst (expand-file-name "/mnt/data1/org-notes-backup/"))
+         (log (expand-file-name "~/workspace/dotfiles/.emacs.d/backup-notes.log")))
+    (message "Running backup-org-notes...")
+    (when (file-directory-p dst)
+      (call-process "rsync" nil log nil "-avh" "--delete" src dst)
+      (message "Backup finished."))))
+
+(add-hook 'kill-emacs-hook #'backup-org-notes)
+#+end_src
+
+
 * Present with org-present
+
 #+begin_src emacs-lisp
   (use-package org-present
     :ensure t
@@ -74,7 +94,7 @@
   (define-prefix-command 'org-present-map)
 
   ;; Bind the prefix C-c p to this keymap globally
-  (global-set-key (kbd "C-c p") 'org-present-map)
+  (global-set-key (kbd "C-c C-p") 'org-present-map)
 
   ;; Bind org-present commands under C-c p
   (define-key org-present-map (kbd "s") 'org-present)         ;; Start presentation
