@@ -1,6 +1,6 @@
 #+TITLE: Emacs Writing & Blogging Setup
 #+AUTHOR: Nik M
-#+PROPERTY: header-args :tangle writing.el :results silent
+#+PROPERTY: header-args :tangle 04-writing.el :results silent
 
 * Org-mode Enhancements
 
@@ -16,50 +16,116 @@
         org-default-notes-file "~/notes/inbox.org"))
 #+END_SRC
 
-* Capture Templates
-#+BEGIN_SRC emacs-lisp
-  (setq org-capture-templates
-        `(
-          ;; Task inbox
-          ("t" "Todo [Inbox]" entry
-           (file+headline ,(concat org-directory "/inbox.org") "Tasks")
-           "* TODO %?\n  %U\n  %a")
-
-          ;; Quick note
-          ("n" "Note" entry
-           (file+headline ,(concat org-directory "/quick-notes.org") "Quick Notes")
-           "* %? \n  %U\n  %a")
-
-          ;; Journal entry (by date tree)
-          ("j" "Journal" entry
-           (file+datetree ,(concat org-directory "/journal.org"))
-           "* %U\n\n%?")
-
-  	;; One-file-per-post blog draft
-  	("B" "Blog post file" plain
-  	 (file+head "blog/posts/${slug}.org"
-                      "#+title: ${title}\n#+date: %U\n#+hugo_tags: \n#+hugo_categories: \n\n")
-  	 "%?"
-  	 :jump-to-captured t)
-  	
-
-
-  	;; Org-roam note capture
-  	("r" "Roam Note" plain
-  	 (function org-roam-capture-)
-  	 "%?"
-  	 :if-new (file+head "roam/${slug}.org"
-  			    "#+title: ${title}\n#+date: %U\n\n"))
-  	))
-
-  (global-set-key (kbd "C-c c") 'org-capture)
-#+END_SRC
 
 ** Visual Tweaks with org-modern
 #+BEGIN_SRC emacs-lisp
 (use-package org-modern
   :hook (org-mode . org-modern-mode))
 #+END_SRC
+
+* Capture Templates
+#+BEGIN_SRC emacs-lisp
+(setq org-capture-templates
+      `(
+        ;; Task inbox
+        ("t" "Todo [Inbox]" entry
+         (file+headline ,(concat org-directory "/inbox.org") "Tasks")
+         "* TODO %?\n  %U\n  %a")
+
+        ;; Quick note
+        ("n" "Note" entry
+         (file+headline ,(concat org-directory "/quick-notes.org") "Quick Notes")
+         "* %?\n  %U\n  %a")
+
+        ;; Journal entry (by date tree)
+        ("j" "Journal" entry
+         (file+datetree ,(concat org-directory "/journal.org"))
+         "* %U\n\n%?")
+
+        ;; One-file-per-post blog draft
+        ("B" "Blog post file" plain
+         (file+head "blog/posts/${slug}.org"
+                    "#+title: ${title}\n#+date: %U\n#+hugo_tags: \n#+hugo_categories: \n\n")
+         "%?"
+         :jump-to-captured t)
+
+        ;; Org-roam note capture
+        ("r" "Roam Note" plain
+         (function org-roam-capture-)
+         "%?"
+         :if-new (file+head "roam/${slug}.org"
+                            "#+title: ${title}\n#+date: %U\n\n"))
+        ))
+
+(global-set-key (kbd "C-c c") 'org-capture)
+#+END_SRC
+
+* Present with org-present
+#+begin_src emacs-lisp
+  (use-package org-present
+    :ensure t
+    :hook ((org-present-mode . nik/org-present-setup)
+           (org-present-mode-quit . nik/org-present-cleanup)))
+
+  (use-package visual-fill-column
+    :ensure t)
+
+  ;; Define a keymap prefix for org-present
+  (define-prefix-command 'org-present-map)
+
+  ;; Bind the prefix C-c p to this keymap globally
+  (global-set-key (kbd "C-c p") 'org-present-map)
+
+  ;; Bind org-present commands under C-c p
+  (define-key org-present-map (kbd "s") 'org-present)         ;; Start presentation
+  (define-key org-present-map (kbd "q") 'org-present-quit)    ;; Quit presentation
+  (define-key org-present-map (kbd "n") 'org-present-next)    ;; Next slide
+  (define-key org-present-map (kbd "p") 'org-present-prev)    ;; Previous slide
+
+  (defun nik/org-present-setup ()
+    ;; Tweak font sizes for better readability
+    (setq-local face-remapping-alist
+                '((default (:height 1.5) variable-pitch)
+                  (header-line (:height 4.0) variable-pitch)
+                  (org-document-title (:height 1.75) org-document-title)
+                  (org-code (:height 1.55) org-code)
+                  (org-verbatim (:height 1.55) org-verbatim)
+                  (org-block (:height 1.25) org-block)
+                  (org-block-begin-line (:height 0.7) org-block)))
+
+    ;; Add blank header line for spacing
+    (setq header-line-format " ")
+
+    ;; Display inline images automatically
+    (org-display-inline-images)
+
+    ;; Center the document and enable line wrapping
+    (visual-fill-column-mode 1)
+    (visual-line-mode 1)
+
+    ;; Hide cursor for distraction-free presentation
+    (org-present-hide-cursor))
+
+  (defun nik/org-present-end ()
+    ;; Reset font customizations
+    (setq-local face-remapping-alist '((default variable-pitch default)))
+
+    ;; Clear the header line string so that it isn't displayed
+    (setq header-line-format nil)
+
+    ;; Stop displaying inline images
+    (org-remove-inline-images)
+
+    ;; Stop centering the document
+    (visual-fill-column-mode 0)
+    (visual-line-mode 0)
+
+    ;; Restore cursor visibility
+    (org-present-show-cursor)
+    (blink-cursor-mode 1)
+    (redisplay))
+
+#+end_src
 
 * Blogging with ox-hugo
 

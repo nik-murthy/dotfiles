@@ -1,5 +1,6 @@
 #+TITLE: UI Configuration
-#+PROPERTY: header-args:emacs-lisp :tangle ui.el :results silent
+#+AUTHOR: Nik M
+#+PROPERTY: header-args:emacs-lisp :tangle 02-ui.el :results silent
 
 * Theme
 

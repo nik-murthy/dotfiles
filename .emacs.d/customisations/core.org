@@ -1,5 +1,6 @@
 #+TITLE: Core Configurations
-#+PROPERTY: header-args :tangle core.el :results silent
+#+AUTHOR: Nik M
+#+PROPERTY: header-args :tangle 01-core.el :results silent
 
 * Package Initialization
 
@@ -11,9 +12,12 @@ Start by setting up package.el and ensuring `use-package` is available.
 ;; ***************
 
 (require 'package)
-(setq package-enable-at-startup nil)
+
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")))
+
+(setq package-enable-at-startup nil)
+(package-initialize) ;; manually initialize the system
 
 ;; Fetch the list of packages available 
 (unless package-archive-contents (package-refresh-contents))
@@ -67,19 +71,22 @@ Start by setting up package.el and ensuring `use-package` is available.
 * Backups and Auto-Save
 
 #+begin_src emacs-lisp
-;; Set user cache directory
-(setq user-cache-directory (expand-file-name "cache/" user-emacs-directory))
+  (savehist-mode 1)
+  (desktop-save-mode 1)
 
-;; Store backup files in a dedicated location
-(setq backup-directory-alist `(("." . ,(expand-file-name "backups" user-cache-directory))))
+  ;; Set user cache directory
+  (setq user-cache-directory (expand-file-name "cache/" user-emacs-directory))
 
-;; Disable auto-save files
-(setq auto-save-default nil)
+  ;; Store backup files in a dedicated location
+  (setq backup-directory-alist `(("." . ,(expand-file-name "backups" user-cache-directory))))
 
-;; Set other cache-related paths
-(setq url-history-file (expand-file-name "url/history" user-cache-directory)
-      auto-save-list-file-prefix (expand-file-name "auto-save-list/.saves-" user-cache-directory)
-      projectile-known-projects-file (expand-file-name "projectile-bookmarks.eld" user-cache-directory))
+  ;; Disable auto-save files
+  (setq auto-save-default nil)
+
+  ;; Set other cache-related paths
+  (setq url-history-file (expand-file-name "url/history" user-cache-directory)
+        auto-save-list-file-prefix (expand-file-name "auto-save-list/.saves-" user-cache-directory)
+        projectile-known-projects-file (expand-file-name "projectile-bookmarks.eld" user-cache-directory))
 #+end_src
 
 ** Shell config
@@ -118,3 +125,16 @@ Start by setting up package.el and ensuring `use-package` is available.
   :config
   (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 #+END_SRC
+
+* Tangle all config files
+
+#+begin_src emacs-lisp
+(defun nik/tangle-all-custom-org-files ()
+  "Tangle all Org files in the customisations directory."
+  (interactive)
+  (let ((org-dir (expand-file-name "customisations/" user-emacs-directory)))
+    (dolist (file (directory-files org-dir t "\\.org$"))
+      (message "Tangling %s" file)
+      (org-babel-tangle-file file))))
+
+#+end_src

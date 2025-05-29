@@ -1,6 +1,6 @@
 #+TITLE: Emacs Completion Setup
 #+AUTHOR: Nik M
-#+PROPERTY: header-args :tangle completions.el :results silent
+#+PROPERTY: header-args :tangle 03-completions.el :results silent
 
 * Completion Framework Setup
 
