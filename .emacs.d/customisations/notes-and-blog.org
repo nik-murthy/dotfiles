@@ -79,72 +79,15 @@
 #+end_src
 
 
-* Present with org-present
+* Present with org-re-reveal
 
 #+begin_src emacs-lisp
-  (use-package org-present
+  (use-package org-re-reveal
     :ensure t
-    :hook ((org-present-mode . nik/org-present-setup)
-           (org-present-mode-quit . nik/org-present-cleanup)))
-
-  (use-package visual-fill-column
-    :ensure t)
-
-  ;; Define a keymap prefix for org-present
-  (define-prefix-command 'org-present-map)
-
-  ;; Bind the prefix C-c p to this keymap globally
-  (global-set-key (kbd "C-c C-p") 'org-present-map)
-
-  ;; Bind org-present commands under C-c p
-  (define-key org-present-map (kbd "s") 'org-present)         ;; Start presentation
-  (define-key org-present-map (kbd "q") 'org-present-quit)    ;; Quit presentation
-  (define-key org-present-map (kbd "n") 'org-present-next)    ;; Next slide
-  (define-key org-present-map (kbd "p") 'org-present-prev)    ;; Previous slide
-
-  (defun nik/org-present-setup ()
-    ;; Tweak font sizes for better readability
-    (setq-local face-remapping-alist
-                '((default (:height 1.5) variable-pitch)
-                  (header-line (:height 4.0) variable-pitch)
-                  (org-document-title (:height 1.75) org-document-title)
-                  (org-code (:height 1.55) org-code)
-                  (org-verbatim (:height 1.55) org-verbatim)
-                  (org-block (:height 1.25) org-block)
-                  (org-block-begin-line (:height 0.7) org-block)))
-
-    ;; Add blank header line for spacing
-    (setq header-line-format " ")
-
-    ;; Display inline images automatically
-    (org-display-inline-images)
-
-    ;; Center the document and enable line wrapping
-    (visual-fill-column-mode 1)
-    (visual-line-mode 1)
-
-    ;; Hide cursor for distraction-free presentation
-    (org-present-hide-cursor))
-
-  (defun nik/org-present-end ()
-    ;; Reset font customizations
-    (setq-local face-remapping-alist '((default variable-pitch default)))
-
-    ;; Clear the header line string so that it isn't displayed
-    (setq header-line-format nil)
-
-    ;; Stop displaying inline images
-    (org-remove-inline-images)
-
-    ;; Stop centering the document
-    (visual-fill-column-mode 0)
-    (visual-line-mode 0)
-
-    ;; Restore cursor visibility
-    (org-present-show-cursor)
-    (blink-cursor-mode 1)
-    (redisplay))
-
+    :after ox
+    :config
+    (setq org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js@4.3.1")
+    (setq org-re-reveal-revealjs-version "4")) 
 #+end_src
 
 * Blogging with ox-hugo

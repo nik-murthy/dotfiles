@@ -14,8 +14,8 @@
  '(custom-enabled-themes '(doom-palenight))
  '(package-selected-packages
    '(consult corfu doom-themes exec-path-from-shell heaven-and-hell magit
-	     marginalia moody orderless org-modern org-present ox-hugo
-	     vertico visual-fill-column yasnippet-snippets)))
+	     marginalia moody orderless org-modern org-re-reveal
+	     ox-hugo vertico yasnippet-snippets)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
