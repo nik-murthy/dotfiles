@@ -14,7 +14,7 @@
         org-pretty-entities t
         org-ellipsis " ⤵"
         org-directory "~/workspace/notes"
-        org-default-notes-file "~/notes/inbox.org"))
+        org-default-notes-file "~/workspace/notes/inbox.org"))
 #+END_SRC
 
 

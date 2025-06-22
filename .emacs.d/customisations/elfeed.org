@@ -1,0 +1,51 @@
+#+TITLE: Elfeed
+#+AUTHOR: Nik M
+#+PROPERTY: header-args :tangle 05-elfeed.el :results silent
+
+* Packages
+
+Install and configure Elfeed and elfeed-org.
+
+#+begin_src emacs-lisp
+  (use-package elfeed
+    :ensure t
+    :config
+    (setq elfeed-feeds
+  	'(("http://planet.emacslife.com/atom.xml" emacs)
+            ("https://www.omgubuntu.co.uk/feed" linux)))
+    
+    (setq elfeed-db-directory "~/.elfeed"
+          elfeed-show-entry-switch 'switch-to-buffer)) 
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package elfeed-org
+    :ensure t
+    :after elfeed
+    :config
+    (setq rmh-elfeed-org-files '("~/workspace/notes/feeds.org")))
+#+end_src
+
+* Keybindings
+
+Launch Elfeed quickly with a keybinding.
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-x w") #'elfeed)
+#+end_src
+
+* Periodic Feed Updates
+
+Automatically update feeds every 30 minutes.
+
+#+begin_src emacs-lisp
+  (run-at-time nil (* 30 60) #'elfeed-update)
+#+end_src
+
+* Save Feed Database on Exit
+
+Ensure read/tag state is preserved between sessions.
+
+#+begin_src emacs-lisp
+  (add-hook 'kill-emacs-hook #'elfeed-db-save)
+#+end_src
