@@ -21,8 +21,17 @@
 ** Visual Tweaks with org-modern
 
 #+BEGIN_SRC emacs-lisp
-(use-package org-modern
-  :hook (org-mode . org-modern-mode))
+  (use-package org-modern
+    :hook (org-mode . org-modern-mode))
+
+  
+(setq org-modern-fold-stars
+      '(("▶" . "▼")   ;; Level 1
+        ("▸" . "▾")   ;; Level 2
+        ("▹" . "▿")   ;; Level 3
+        ("►" . "▻")   ;; Level 4
+        ("❯" . "❮"))) ;; Level 5
+
 #+END_SRC
 
 * Capture Templates
