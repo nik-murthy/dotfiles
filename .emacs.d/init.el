@@ -13,10 +13,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(doom-palenight))
  '(package-selected-packages
-   '(consult corfu doom-themes elfeed elfeed-org exec-path-from-shell
-	     heaven-and-hell magit marginalia moody orderless
-	     org-modern org-re-reveal ox-hugo vertico
-	     yasnippet-snippets)))
+   '(consult corfu doom-themes elfeed elfeed-org exec-path-from-shell heaven-and-hell magit marginalia moody orderless org-modern org-re-reveal ox-hugo vertico yasnippet-snippets)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

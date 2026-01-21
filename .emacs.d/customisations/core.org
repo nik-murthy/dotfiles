@@ -138,3 +138,13 @@ Start by setting up package.el and ensuring `use-package` is available.
       (org-babel-tangle-file file))))
 
 #+end_src
+
+* Setup proxy
+
+#+begin_src emacs-lisp
+  (setq url-proxy-services
+      '(("http" . "localhost:3129")
+        ("https" . "localhost:3129")))
+
+
+#+end_src

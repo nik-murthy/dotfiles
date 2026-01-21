@@ -7,14 +7,15 @@
 ** Core Org Settings
 
 #+BEGIN_SRC emacs-lisp
-(use-package org
-  :config
-  (setq org-hide-emphasis-markers t
-        org-startup-indented t
-        org-pretty-entities t
-        org-ellipsis " ⤵"
-        org-directory "~/workspace/notes"
-        org-default-notes-file "~/workspace/notes/inbox.org"))
+  (use-package org
+    :config
+    (setq org-hide-emphasis-markers t
+          org-startup-indented t
+          org-pretty-entities t
+          org-ellipsis " ⤵"
+          org-directory "~/workspace/notes"
+          org-default-notes-file "~/workspace/notes/inbox.org")
+          org-agenda-files '("~/workspace/notes"))
 #+END_SRC
 
 
@@ -37,37 +38,30 @@
 * Capture Templates
 
 #+BEGIN_SRC emacs-lisp
+
 (setq org-capture-templates
       `(
-        ;; Task inbox
-        ("t" "Todo [Inbox]" entry
-         (file+headline ,(concat org-directory "/inbox.org") "Tasks")
+        ;; Inbox - quick tasks or thoughts
+        ("i" "Inbox" entry
+         (file "~/org/inbox.org")
          "* TODO %?\n  %U\n  %a")
 
-        ;; Quick note
+        ;; Notes - general reference notes
         ("n" "Note" entry
-         (file+headline ,(concat org-directory "/quick-notes.org") "Quick Notes")
-         "* %?\n  %U\n  %a")
+         (file "~/org/notes.org")
+         "* %? :note:\n  %U\n  %a")
 
-        ;; Journal entry (by date tree)
+        ;; Projects - new project entry
+        ("p" "Project" entry
+         (file "~/org/projects.org")
+         "* %^{Project Title} [/] :project:\n  %U\n  - Goals:\n    - [ ] %?\n  - Notes:\n")
+
+        ;; Journal - daily log
         ("j" "Journal" entry
-         (file+datetree ,(concat org-directory "/journal.org"))
-         "* %U\n\n%?")
-
-        ;; One-file-per-post blog draft
-        ("B" "Blog post file" plain
-         (file+head "blog/posts/${slug}.org"
-                    "#+title: ${title}\n#+date: %U\n#+hugo_tags: \n#+hugo_categories: \n\n")
-         "%?"
-         :jump-to-captured t)
-
-        ;; Org-roam note capture
-        ("r" "Roam Note" plain
-         (function org-roam-capture-)
-         "%?"
-         :if-new (file+head "roam/${slug}.org"
-                            "#+title: ${title}\n#+date: %U\n\n"))
+         (file+olp+datetree "~/org/journal.org")
+         "* %?\nEntered on %U\n  %i\n  %a")
         ))
+
 
 (global-set-key (kbd "C-c c") 'org-capture)
 #+END_SRC
